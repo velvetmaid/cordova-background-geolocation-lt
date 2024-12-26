@@ -13,11 +13,16 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-background-geolocation-lt": "^4.17.4"
+    "cordova-android": "^13.0.0",
+    "cordova-background-geolocation-lt": "^4.17.4",
+    "cordova-plugin-background-fetch": "~7.2.4"
   },
   "cordova": {
     "plugins": {
       "cordova-background-geolocation-lt": {}
-    }
+    },
+    "platforms": [
+      "android"
+    ]
   }
 }
