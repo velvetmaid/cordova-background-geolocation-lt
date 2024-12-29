@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>HelloCordova</name>
-    <description>Sample Apache Cordova App</description>
+    <name>GPS Geolocation for Testing</name>
+    <description>GPS Background Location Tracking</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
         Apache Cordova Team
     </author>
@@ -11,7 +11,6 @@
 
     <platform name="android">
         <preference name="AndroidXEnabled" value="true" />
-        <!-- Location permission -->
         <config-file parent="/manifest" target="app/src/main/AndroidManifest.xml">
             <uses-permission android:minSdkVersion="34" android:name="android.permission.USE_EXACT_ALARM" />
         </config-file>
