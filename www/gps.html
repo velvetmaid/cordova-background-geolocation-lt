@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPS Tracker</title>
+  </head>
+  <body>
+    <h1>GPS Tracker</h1>
+    <p>This is a simple GPS tracker application.</p>
+    <p>Click the button below to get your current location or start automatic updates:</p>
+    <button onclick="getLocation()">Get Location</button>
+    <button onclick="startAutoUpdate()">Start Auto Update</button>
+    <p id="demo"></p>
+    <div id="log"></div>
+    <script>
+      // Initialize the background geolocation plugin
+      document.addEventListener('deviceready', function() {
+        // Request permission for local notifications
+        cordova.plugins.notification.local.requestPermission();
+
+        BackgroundGeolocation.configure({
+          desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+          stationaryRadius: 1,
+          distanceFilter: 1,
+          debug: true,
+          stopOnTerminate: false,
+          startOnBoot: true
+        });
+
+        BackgroundGeolocation.on('location', function(location) {
+          // Handle your locations here
+          // to perform long-running operation with the location,
+          // you need to create a background-task
+          BackgroundGeolocation.startTask(function(taskKey) {
+            // Execute long-running task
+            var x = document.getElementById("demo");
+            x.innerHTML = "Latitude: " + location.latitude + "<br>Longitude: " + location.longitude;
+            alert("Latitude: " + location.latitude + "\nLongitude: " + location.longitude);
+
+            // Send local notification
+            cordova.plugins.notification.local.schedule({
+              title: 'New Location',
+              text: 'Latitude: ' + location.latitude + ', Longitude: ' + location.longitude,
+              foreground: true
+            });
+
+            // When finished, you must call finish
+            BackgroundGeolocation.finish(taskKey);
+          });
+        });
+
+        BackgroundGeolocation.on('error', function(error) {
+          var log = document.getElementById("log");
+          log.innerHTML += '<p>[ERROR] BackgroundGeolocation error: ' + error + '</p>';
+          console.log('[ERROR] BackgroundGeolocation error:', error);
+        });
+
+        BackgroundGeolocation.on('start', function() {
+          var log = document.getElementById("log");
+          log.innerHTML += '<p>[INFO] BackgroundGeolocation service has been started</p>';
+          console.log('[INFO] BackgroundGeolocation service has been started');
+        });
+
+        BackgroundGeolocation.on('stop', function() {
+          var log = document.getElementById("log");
+          log.innerHTML += '<p>[INFO] BackgroundGeolocation service has been stopped</p>';
+          console.log('[INFO] BackgroundGeolocation service has been stopped');
+        });
+      }, false);
+
+      var x = document.getElementById("demo");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          x.innerHTML = "Geolocation is not supported.";
+        }
+      }
+
+      function showPosition(position) {
+        x.innerHTML =
+          "Latitude: " +
+          position.coords.latitude +
+          "<br>Longitude: " +
+          position.coords.longitude;
+          alert("Latitude: " + position.coords.latitude + "\nLongitude: " + position.coords.longitude);
+      }
+
+      function startAutoUpdate() {
+        BackgroundGeolocation.start();
+      }
+    </script>
+  </body>
+</html>
